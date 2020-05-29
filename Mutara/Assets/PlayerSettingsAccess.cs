@@ -20,21 +20,22 @@ public class PlayerSettingsAccess : MonoBehaviour
 
     public static PlayerSettingsAccess Instance { get; private set; }
 
-    public PlayerSettings PlayerSettings
+    public PlayerSettings GetSettings()
     {
-        get => settings;
-        set
-        {
-            settings = value;
-            Save(settings);
-        }
+        return settings;
+    }
+
+    public void SaveSettings(PlayerSettings settings)
+    {
+        this.settings = settings;
+        Save(settings);
     }
 
     void Awake()
     {
         Debug.Log("PlayerSettingsAccess awake");
         playerSettingsFilePath = Application.persistentDataPath + "/PlayerSettings.json";
-        PlayerSettings = Read();
+        settings = Read();
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }

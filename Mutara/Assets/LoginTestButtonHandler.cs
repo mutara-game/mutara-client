@@ -17,14 +17,14 @@ public class LoginTestButtonHandler : MonoBehaviour
 
     public async void OnClick()
     {
-        var settings = PlayerSettingsAccess.Instance.PlayerSettings;
+        var settings = PlayerSettingsAccess.Instance.GetSettings();
         if (!settings.UserAccountCreated)
         {
             settings.UserId = Guid.NewGuid();
             settings.Password = Guid.NewGuid().ToString();
             Debug.Log("creating a user account...");
             settings.UserSub = await CreateUserAccount(settings);
-            PlayerSettingsAccess.Instance.PlayerSettings = settings;
+            PlayerSettingsAccess.Instance.SaveSettings(settings);
         }
         
         string s = await CallSignIn(settings);
