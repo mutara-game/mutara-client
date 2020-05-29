@@ -4,78 +4,80 @@ using Newtonsoft.Json;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-/// <summary>
-/// Handles access to local settings, stuff like
-/// persistent player ID and whatever.
-///
-/// Eventually player ID would be in the keychain
-/// or somewhere secure; for now, just moving forward
-/// with something simple.
-/// </summary>
-public class PlayerSettingsAccess : MonoBehaviour
+namespace Mutara
 {
-    // set in Awake() because not allowed to access Application.persistentDataPath before that point
-    private static string playerSettingsFilePath; 
-    private PlayerSettings settings;
-
-    public static PlayerSettingsAccess Instance { get; private set; }
-
-    public PlayerSettings GetSettings()
+    /// <summary>
+    /// Handles access to local settings, stuff like
+    /// persistent player ID and whatever.
+    ///
+    /// Eventually player ID would be in the keychain
+    /// or somewhere secure; for now, just moving forward
+    /// with something simple.
+    /// </summary>
+    public class PlayerSettingsAccess : MonoBehaviour
     {
-        return settings;
-    }
+        // set in Awake() because not allowed to access Application.persistentDataPath before that point
+        private static string playerSettingsFilePath;
+        private PlayerSettings settings;
 
-    public void SaveSettings(PlayerSettings settings)
-    {
-        this.settings = settings;
-        Save(settings);
-    }
+        public static PlayerSettingsAccess Instance { get; private set; }
 
-    void Awake()
-    {
-        Debug.Log("PlayerSettingsAccess awake");
-        playerSettingsFilePath = Application.persistentDataPath + "/PlayerSettings.json";
-        settings = Read();
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
-
-    private static PlayerSettings Read()
-    {
-        Debug.Log($"Reading {playerSettingsFilePath}");
-        if (!File.Exists(playerSettingsFilePath))
+        public PlayerSettings GetSettings()
         {
-            return new PlayerSettings();
+            return settings;
         }
 
-        using (var fs = File.Open(playerSettingsFilePath, FileMode.Open))
+        public void SaveSettings(PlayerSettings settings)
         {
-            using (var sr = new StreamReader(fs))
+            this.settings = settings;
+            Save(settings);
+        }
+
+        void Awake()
+        {
+            Debug.Log("PlayerSettingsAccess awake");
+            playerSettingsFilePath = Application.persistentDataPath + "/PlayerSettings.json";
+            settings = Read();
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+
+        private static PlayerSettings Read()
+        {
+            Debug.Log($"Reading {playerSettingsFilePath}");
+            if (!File.Exists(playerSettingsFilePath))
             {
-                return JsonConvert.DeserializeObject<PlayerSettings>(sr.ReadToEnd());
+                return new PlayerSettings();
+            }
+
+            using (var fs = File.Open(playerSettingsFilePath, FileMode.Open))
+            {
+                using (var sr = new StreamReader(fs))
+                {
+                    return JsonConvert.DeserializeObject<PlayerSettings>(sr.ReadToEnd());
+                }
+            }
+        }
+
+        private static void Save(PlayerSettings settings)
+        {
+            Debug.Log($"Saving {playerSettingsFilePath}");
+            using (var fs = File.Create(playerSettingsFilePath))
+            {
+                using (var sw = new StreamWriter(fs))
+                {
+                    sw.Write(JsonConvert.SerializeObject(settings));
+                }
             }
         }
     }
 
-    private static void Save(PlayerSettings settings)
+    public class PlayerSettings
     {
-        Debug.Log($"Saving {playerSettingsFilePath}");
-        using (var fs = File.Create(playerSettingsFilePath))
-        {
-            using (var sw = new StreamWriter(fs))
-            {
-                sw.Write(JsonConvert.SerializeObject(settings));
-            }
-        }
-    }
-}
+        public Guid UserId { get; set; }
+        public string Password { get; set; }
+        public string UserSub { get; set; }
 
-public class PlayerSettings
-{
-    public Guid UserId { get; set; }
-    public string Password { get; set; }
-    public string UserSub { get; set; }
-    
-    [JsonIgnore]
-    public bool UserAccountCreated => UserId != Guid.Empty;
+        [JsonIgnore] public bool UserAccountCreated => UserId != Guid.Empty;
+    }
 }
