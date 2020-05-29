@@ -19,13 +19,35 @@ public class LoginTestButtonHandler : MonoBehaviour
 
     public async void OnClick()
     {
-        string s = await CallSignIn();
+        var settings = PlayerSettingsAccess.Instance.PlayerSettings;
+        if (!settings.UserAccountCreated)
+        {
+            settings.UserId = Guid.NewGuid();
+            settings.Password = Guid.NewGuid().ToString();
+            Debug.Log("creating a user account...");
+            await CreateUserAccount(settings);
+        }
+        
+        string s = await CallSignIn(settings);
         // TODO remove Amazon.Cognito* if it turns out to be lame and not needed.
         EditorUtility.DisplayDialog("Clicked", s, "Great");
     }
 
-    private async Task<string> CallSignIn()
+    private async Task<string> CreateUserAccount(PlayerSettings settings)
     {
+        var createAccountResponse =
+            await NetworkManager.Instance.Auth.CreateAccount(settings.UserId, settings.Password);
+        return createAccountResponse.UserSub;
+    }
+    
+    private async Task<string> CallSignIn(PlayerSettings settings)
+    {
+        var signInResponse = await NetworkManager.Instance.Auth.SignIn(settings.UserId, settings.Password);
+        // TODO error handling..
+        return signInResponse.IdToken;
+        
+        
+        /*
         var client = new HttpClient();
         var signInRequest = new SignInRequest
         {
@@ -54,5 +76,6 @@ public class LoginTestButtonHandler : MonoBehaviour
         
         
         return responseObject.Content.IdToken;
+        */
     }
 }

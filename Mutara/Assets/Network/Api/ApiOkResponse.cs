@@ -6,8 +6,6 @@ namespace Mutara.Web.Api
     public class ApiOkResponse<T> : ApiResponse
     {
         public T Content { get; set; } 
-        public int StatusCode { get; set; }
-        public string Message { get; set; }
 
         public ApiOkResponse() : base(200)
         {
