@@ -73,7 +73,8 @@ public class PlayerSettings
 {
     public Guid UserId { get; set; }
     public string Password { get; set; }
-
+    public string UserSub { get; set; }
+    
     [JsonIgnore]
     public bool UserAccountCreated => UserId != Guid.Empty;
 }

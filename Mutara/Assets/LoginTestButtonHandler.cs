@@ -25,7 +25,8 @@ public class LoginTestButtonHandler : MonoBehaviour
             settings.UserId = Guid.NewGuid();
             settings.Password = Guid.NewGuid().ToString();
             Debug.Log("creating a user account...");
-            await CreateUserAccount(settings);
+            settings.UserSub = await CreateUserAccount(settings);
+            PlayerSettingsAccess.Instance.PlayerSettings = settings;
         }
         
         string s = await CallSignIn(settings);
