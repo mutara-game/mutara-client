@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Mutara.Network.Api;
 using Mutara.Network.Api.Auth;
+using Mutara.Network.Api.Player;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -15,6 +16,8 @@ namespace Mutara.Network
         public static NetworkManager Instance { get; private set; }
 
         public AuthEndpoint Auth { get; private set; }
+        
+        public PlayerEndpoint Player { get; private set; }
         
         /// <summary>
         /// What we get when we log in successfully and want to call
@@ -28,6 +31,7 @@ namespace Mutara.Network
 
             Instance = this;
             Instance.Auth = new AuthEndpoint();
+            Instance.Player = new PlayerEndpoint();
 
             // This object will persist until the game is closed
             DontDestroyOnLoad(gameObject);
@@ -59,7 +63,28 @@ namespace Mutara.Network
                 ApiOkResponse<TResponse> responseObject = JsonConvert.DeserializeObject<ApiOkResponse<TResponse>>(raw);
                 return responseObject.Content;
             }
+            
+            public async Task<TResponse> GetAuth<TResponse>(string path)
+                where TResponse : class
+            {
+                var client = new HttpClient();
+                var r = new HttpRequestMessage
+                {
+                    RequestUri = new Uri($"https://localhost:5001{path}"),
+                    Method = HttpMethod.Get,
+                };
+                r.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                r.Headers.Add("Authorization", $"Bearer {Instance.IdToken}");
+
+                HttpResponseMessage response = await client.SendAsync(r);
+                // TODO all manner of error conditions here...
+                string raw = await response.Content.ReadAsStringAsync();
+                ApiOkResponse<TResponse> responseObject = JsonConvert.DeserializeObject<ApiOkResponse<TResponse>>(raw);
+                return responseObject.Content; 
+            }
         }
+
+
 
         public class AuthEndpoint : Endpoint
         {
@@ -90,6 +115,16 @@ namespace Mutara.Network
                 };
                 // TODO error conditions...
                 return await Post<CreateAccountRequest, CreateAccountResponse>("/Auth/create", createRequest);
+            }
+        }
+
+        public class PlayerEndpoint : Endpoint
+        {
+            internal PlayerEndpoint() {}
+
+            public async Task<PlayerDetailsResponse> GetPlayerDetails(Guid playerId)
+            {
+                return await GetAuth<PlayerDetailsResponse>($"/Player/details/{playerId}");
             }
         }
     }
