@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Mutara.Network;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,10 +20,10 @@ namespace Mutara
                 PlayerSettingsAccess.Instance.SaveSettings(playerSettings);
             }
 
-            string s = await CallSignIn(playerSettings);
-            // TODO save this token somewhere useful! (not player settings..)
-            // TODO remove Amazon.Cognito* if it turns out to be lame and not needed.
-            // EditorUtility.DisplayDialog("Clicked", s, "Great");
+            NetworkManager.Instance.IdToken =  await CallSignIn(playerSettings);
+            Debug.Log("Sign In was successful, idToken received");
+            
+            // go to .... somewhere.
             SceneManager.LoadScene("SampleScene");
         }
         

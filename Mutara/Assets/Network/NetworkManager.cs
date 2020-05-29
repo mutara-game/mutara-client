@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Amazon;
 using Mutara.Network.Api;
 using Mutara.Network.Api.Auth;
 using Newtonsoft.Json;
@@ -16,6 +15,12 @@ namespace Mutara.Network
         public static NetworkManager Instance { get; private set; }
 
         public AuthEndpoint Auth { get; private set; }
+        
+        /// <summary>
+        /// What we get when we log in successfully and want to call
+        /// authenticated /authorized endpoints
+        /// </summary>
+        public string IdToken { get; set; }
 
         void Awake()
         {
@@ -27,7 +32,8 @@ namespace Mutara.Network
             // This object will persist until the game is closed
             DontDestroyOnLoad(gameObject);
             // Initialize AWS SDK
-            UnityInitializer.AttachToGameObject(gameObject);
+            // TODO
+            // UnityInitializer.AttachToGameObject(gameObject);
         }
 
         public abstract class Endpoint
