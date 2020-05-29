@@ -1,6 +1,6 @@
 using System;
 
-namespace Mutara.Web.Api.Auth
+namespace Mutara.Network.Api.Auth
 {
     [Serializable]
     public class SignInResponse

@@ -1,6 +1,6 @@
 using System;
 
-namespace Mutara.Web.Api
+namespace Mutara.Network.Api
 {
     [Serializable]
     public class ApiOkResponse<T> : ApiResponse

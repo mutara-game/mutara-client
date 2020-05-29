@@ -3,8 +3,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Mutara.Web.Api;
-using Mutara.Web.Api.Auth;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
