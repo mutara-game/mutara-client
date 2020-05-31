@@ -131,8 +131,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1527702009}
   - component: {fileID: 1527702010}
+  - component: {fileID: 1527702011}
+  - component: {fileID: 1527702012}
   m_Layer: 5
-  m_Name: NetworkManager
+  m_Name: InitScripts
   m_TagString: Untagged
   m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -162,5 +164,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0672974f923c84592acdf598c403ed57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1527702011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527702008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98ad1ecda284f4dab95a7d6d27986ded, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1527702012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527702008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 602cebfa2c0044deacb1477ceb40e6a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
